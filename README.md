@@ -1,6 +1,6 @@
 # CENTAUR
 
-CENTAUR is a python-based hybrid power system simulation program with a functional and lighweight GUI. It can be used for the design and simulation of hybrid solar PV-battery-diesel microgrids and is intended for both research and practical/commercial purposes. In particular, CENTAUR was originally designed as an open source platform to trial and experiment with novel control operating modes / strategies in a solar PV-battery-genset system. 
+CENTAUR is a python-based hybrid power system simulation program with a functional and lighweight GUI. It can be used for the design and simulation of hybrid solar PV-battery-diesel microgrids and is intended for both research and practical/commercial purposes. In particular, CENTAUR was originally developed as an open source platform to trial and experiment with novel control operating modes / strategies in a solar PV-battery-genset system. Note that unlike HOMER or Hybrid2, CENTAUR does not have optimisation functionality.
 
 The program is fundamentally a chronological simulation whereby energy balances within a hybrid power system are calculated for every hour of a standard year (i.e. 8760 hours). It is functionally similar to the simulation components in packages such as HOMER and Hybrid2. Hourly solar PV outputs are [generated synthetically](https://github.com/susantoj/synthetic-solar) (using the TAG model by Aguiar and Collares-Pereira) and battery energy flows are estimated using Manwell and McGowan's [kinetic battery model (KiBaM)](https://github.com/susantoj/kinetic-battery).
 
