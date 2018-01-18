@@ -62,7 +62,10 @@ def init():
         'P_stc'  : 175000,              # PV system output at STC (Wp)
         'gamma'  : 0.0038,              # Power temperature coefficient (pu per deg C)
         'eff_pv' : 0.95,                # Efficiency of PV inverter (AC coupled) or charge controller (DC coupled) in pu
-        'pv_cpl' : 'DC'                 # PV coupling - AC or DC
+        'pv_cpl' : 'DC',                # PV coupling - AC or DC
+        'tilt'   : 10.0,                # Tilt angle
+        'azimuth' : 180.0,              # Azimuth angle
+        'albedo' : 0.2                  # Albedo / ground reflectance
         }
     
     loads = np.array([[43.9, 43.9],   # 00:00

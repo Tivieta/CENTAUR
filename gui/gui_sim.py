@@ -151,6 +151,7 @@ class sim_ui(QtGui.QWidget):
             
         if topo[0] in [1,2,3]:
             G0 = self.sim_out['G0']
+            GT = self.sim_out['GT']
             P_pv = self.sim_out['P_pv']
             E_exc = sum(self.sim_out['P_pv_exc'])
             E_sol = sum(P_pv) - E_exc
@@ -196,6 +197,7 @@ class sim_ui(QtGui.QWidget):
             self.write('SOLAR PV SYSTEM \n')
             self.write('--------------- \n')
             self.write('Total GHI: ' + str(round(sum(self.sim_out['G0'])/1000,2)) + ' kWh/m2 per year\n')
+            self.write('Total incident radiation: ' + str(round(sum(self.sim_out['GT'])/1000,2)) + ' kWh/m2 per year\n')
             self.write('Total solar PV system output: ' + str(round(sum(P_pv)/1000,2)) + ' kWh (including inverter/SCC losses)\n')
             self.write('Useful solar PV energy: ' + str(round(E_sol/1000,2)) + ' kWh (' + str(round(E_sol/sum(P_pv)*100,2)) + '% of total solar output)\n')
             self.write('Excess solar PV energy: ' + str(round(E_exc/1000,2)) + ' kWh (' + str(round(E_exc/sum(P_pv)*100,2)) + '% of total solar output)\n')

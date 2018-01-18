@@ -5,7 +5,7 @@
 Synthetic Solar Radiation Module
 Copyright (C) 2014-2017 Julius Susanto
 
-Last edited: December 2017
+Last edited: January 2018
 
 Main Functions
 --------------
@@ -13,6 +13,9 @@ Main Functions
 - Aguiar_hourly_kt: generate sequence of hourly clearness indices for a single solar day
 - Aguiar_daily_Kt: generate sequence of daily clearness indices given mean monthly Kt
 - trend_sequence: generate annual sequence of hourly trend irradiances (no randomness)
+- incident_HDKR: generate annual sequence of hourly irradiances incident on a tilted plane with HDKR model (W/m2)
+
+Note: all hourly sequences are calculated in terms of solar time at the location (not civil time)
 
 Utility Functions
 -----------------
@@ -377,7 +380,7 @@ def Aguiar_hourly_G0(Ktm, lat):
     of synthetic daily and hourly irradiance values is used to create the sequence.
     
     Inputs: Ktm is an array of monthly mean clearness indices
-            lat is the latitude of the location (in decimals)
+            lat is the latitude of the location (in decimal degrees)
     """
     days = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31] 
     
@@ -392,7 +395,7 @@ def Aguiar_hourly_G0(Ktm, lat):
     # Generate hourly clearness indices for each hour in the year
     kt = []
     for d in range(365):
-        kti = Aguiar_hourly_kt(Kt[d], d, lat, 10)
+        kti = Aguiar_hourly_kt(Kt[d], d+1, lat, 10)
         kt.extend(kti)
     
     # Generate trend irradiances for each hour in the year
@@ -401,4 +404,73 @@ def Aguiar_hourly_G0(Ktm, lat):
     # Calculate synthetic irradiance for each hour of the year
     G0 = G0c * np.array(kt)
     
-    return G0
+    return G0, kt
+    
+def incident_HDKR(G0, Kt, lat, tilt, azimuth, albedo):
+    """
+    Generates an annual sequence of hourly irradiances incident on a tilted surface (W/m2)
+    Calculations based on Hay, Davies, Klucher and Reindl (HDKR) model.
+    
+    Inputs: G0 is an array of hourly global horizontal irradiances
+            Kt is an array of hourly clearness indices
+            lat is the latitude of the location (in decimal degrees)
+            tilt is the tilt angle of the surface (in degrees)
+            azimuth is the azimuthal angle of the surface (in degrees)
+            albedo is the ground reflectance (in per unit - 0.0 = 0%, 1.0 = 100%)
+    """
+    
+    phi = np.radians(lat)
+    beta = np.radians(tilt)
+    gamma = np.radians(azimuth)
+    
+    # Generate trend (extraterrestrial) irradiances for each hour in the year
+    G0c = trend_sequence(lat)
+    
+    # Set up hour angles for each hour of the year
+    h = np.array(list(np.arange(1,25)) * 365)
+    omega = (h - 12.5) * np.pi / 12     # Hour angle at centre of each hour (0 is solar noon)
+    
+    # Calculate declination for every hour of the year
+    dec_d = []
+    for d in range(1,366):
+        dec_d.append(declination(d))    
+    delta = np.repeat(np.array(dec_d), 24)
+    
+    # Calculate angle of incidence on tilted surface for every hour of the year
+    cos_theta = np.sin(delta) * np.sin(phi) * np.cos(beta) - np.sin(delta) * np.cos(phi) * np.sin(beta) * np.cos(gamma) + np.cos(delta) * np.cos(phi) * np.cos(beta) * np.cos(omega) + np.cos(delta) * np.sin(phi) * np.sin(beta) * np.cos(gamma) * np.cos(omega) + np.cos(delta) * np.sin(beta) * np.sin(gamma) * np.sin(omega)
+    
+    # Calculate zenith angle for every hour of the year
+    cos_theta_z = np.cos(phi) * np.cos(delta) * np.cos(omega) + np.sin(phi) * np.sin(delta)
+    
+    # Ratio of beam radiation on tilted surface to beam radiation on horizontal surface
+    Rb = cos_theta / cos_theta_z
+    
+    # Diffuse fraction for each hour of the year
+    Df = []
+    for i in range(8760):
+        if Kt[i] <= 0.22:
+            Df.append(1.0 - 0.09 * Kt[i])
+        elif Kt[i] > 0.22 and Kt[i] <= 0.8:
+            Df.append(0.9511 - 0.1604 * Kt[i] + 4.388 * Kt[i] ** 2 - 16.638 * Kt[i] ** 3 + 12.336 * Kt[i] ** 4)
+        else:
+            Df.append(0.165)
+    Df = np.array(Df)
+    
+    # Beam radiation
+    Gb = (np.ones(8760) - Df) * G0
+    Gd = Df * G0
+    
+    f = np.zeros(8760)
+    Ai = np.zeros(8760)
+    for i in range(8760):
+        if G0[i] > 0:
+            # Horizon brightening factor
+            f[i] = np.sqrt(Gb[i] / G0[i])
+    
+            # Anisotropy index
+            Ai[i] = Gb[i] / G0c[i]
+    
+    # Global radiation incident on PV array (HDKR model)
+    Gt = (Gb + Gd * Ai) * Rb + Gd * (np.ones(8760) - Ai) * (1 + np.cos(beta)) / 2 * (np.ones(8760) + f * np.sin(beta/2) ** 3) + G0 * albedo * (1 - np.cos(beta)) / 2
+    
+    return Gt

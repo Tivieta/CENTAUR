@@ -97,6 +97,27 @@ class solar_ui(QtGui.QWidget):
         self.edit_eff = QtGui.QLineEdit()
         self.edit_eff.setFixedWidth(100)
         
+        title4 = QtGui.QLabel('Solar PV Array Configuration')
+        title4.setFont(QtGui.QFont('arial', weight=QtGui.QFont.Bold))
+        
+        label11a = QtGui.QLabel('Tilt angle:')
+        label11b = QtGui.QLabel('degrees')
+        
+        self.edit_tilt = QtGui.QLineEdit()
+        self.edit_tilt.setFixedWidth(100)
+        
+        label12a = QtGui.QLabel('Azimuth angle:')
+        label12b = QtGui.QLabel('degrees')
+        
+        self.edit_azimuth = QtGui.QLineEdit()
+        self.edit_azimuth.setFixedWidth(100)
+        
+        label13a = QtGui.QLabel('Albedo:')
+        label13b = QtGui.QLabel('pu')
+        
+        self.edit_albedo = QtGui.QLineEdit()
+        self.edit_albedo.setFixedWidth(100)
+        
         layout = QtGui.QGridLayout()
         layout.addWidget(title1, 0, 0)
         layout.addWidget(label1, 1, 0)
@@ -107,6 +128,7 @@ class solar_ui(QtGui.QWidget):
         layout.addWidget(update_button, 3, 2)
         layout.addWidget(self.tableWidget, 4, 0, 10, 3)
         layout.addWidget(vline, 0, 4, 15, 4)
+        
         layout.addWidget(title3, 0, 5)
         layout.addWidget(label4a, 1, 5)
         layout.addWidget(self.edit_Pstc, 1, 6)
@@ -128,6 +150,17 @@ class solar_ui(QtGui.QWidget):
         layout.addWidget(label10a, 7, 5)
         layout.addWidget(self.edit_eff, 7, 6)
         layout.addWidget(label10b, 7, 7)
+        
+        layout.addWidget(title4, 0, 8)
+        layout.addWidget(label11a, 1, 8)
+        layout.addWidget(self.edit_tilt, 1, 9)
+        layout.addWidget(label11b, 1, 10)
+        layout.addWidget(label12a, 2, 8)
+        layout.addWidget(self.edit_azimuth, 2, 9)
+        layout.addWidget(label12b, 2, 10)
+        layout.addWidget(label13a, 3, 8)
+        layout.addWidget(self.edit_albedo, 3, 9)
+        layout.addWidget(label13b, 3, 10)
         self.setLayout(layout)
         
         self.refresh_data()
@@ -140,6 +173,9 @@ class solar_ui(QtGui.QWidget):
         self.edit_ke.editingFinished.connect(utility.create_validation_hook(self, self.edit_ke, "Ke", 0, 1))
         self.edit_km.editingFinished.connect(utility.create_validation_hook(self, self.edit_km, "Km", 0, 1))
         self.edit_eff.editingFinished.connect(utility.create_validation_hook(self, self.edit_eff, "Efficiency", 0, 1))
+        self.edit_tilt.editingFinished.connect(utility.create_validation_hook(self, self.edit_tilt, "Tilt", 0, 90))
+        self.edit_azimuth.editingFinished.connect(utility.create_validation_hook(self, self.edit_azimuth, "Azimuth", -180, 180))
+        self.edit_albedo.editingFinished.connect(utility.create_validation_hook(self, self.edit_albedo, "Albedo", 0, 1))
         
         self.pv_coupling.currentIndexChanged.connect(self.update_coupling)
         update_button.clicked.connect(self.buttonClicked)
@@ -160,6 +196,9 @@ class solar_ui(QtGui.QWidget):
         globals.pv_data['k_e'] = float(self.edit_ke.text())
         globals.pv_data['k_m'] = float(self.edit_km.text())
         globals.pv_data['eff_pv'] = float(self.edit_eff.text())
+        globals.pv_data['tilt'] = float(self.edit_tilt.text())
+        globals.pv_data['azimuth'] = float(self.edit_azimuth.text())
+        globals.pv_data['albedo'] = float(self.edit_albedo.text())
     
     def update_coupling(self):
         """Update global variable for AC/DC coupling combo box"""
@@ -213,6 +252,9 @@ class solar_ui(QtGui.QWidget):
         self.edit_ke.setText(str(globals.pv_data['k_e']))
         self.edit_km.setText(str(globals.pv_data['k_m']))
         self.edit_eff.setText(str(globals.pv_data['eff_pv']))
+        self.edit_tilt.setText(str(globals.pv_data['tilt']))
+        self.edit_azimuth.setText(str(globals.pv_data['azimuth']))
+        self.edit_albedo.setText(str(globals.pv_data['albedo']))
             
 class SolarTable(utility.CentaurTable): 
     """Modified version of LowFi table specifically for the Right Of Way tab."""

@@ -83,11 +83,17 @@ def run_sim(sys_dict, pv_dict, batt_dict, gen_dict, load_dict):
         gamma = pv_dict['gamma']
         eff_pv = pv_dict['eff_pv']
         pv_cpl = pv_dict['pv_cpl']
+        tilt = pv_dict['tilt']
+        azimuth = pv_dict['azimuth']
+        albedo = pv_dict['albedo']
         
-        # Generate hourly data for solar radiation for one year
-        G0 = synth_solar.Aguiar_hourly_G0(Ktm, lat)
-
+        # Generate hourly data for solar radiation and clearness indices for one year
+        G0, Kt = synth_solar.Aguiar_hourly_G0(Ktm, lat)
+        GT = synth_solar.incident_HDKR(G0, Kt, lat, tilt, azimuth, albedo)
+        
         # PV module temperature derating for whole year
+        # Effective cell temperature: temp_eff = temp_ambient + temp_STC (25 deg)
+        # Temperature derating = 1 - gamma * (temp_eff - temp_STC) = 1 - gamma * temp_ambient
         k_t = []
         days = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
         for i in range(12):
@@ -96,12 +102,13 @@ def run_sim(sys_dict, pv_dict, batt_dict, gen_dict, load_dict):
 
         # PV array output for every hour of the year
         P_d = np.multiply(np.array(k_t), P_stc * k_e * k_m / 1000)
-        P_pv = np.multiply(np.array(G0), P_d) * eff_pv          # PV output (including inverter/SCC efficiency)
+        P_pv = np.multiply(np.array(GT), P_d) * eff_pv          # PV output (including inverter/SCC efficiency)
         # Limit PV output to inverter rating for AC coupled systems
         if pv_cpl == 'AC':
             P_pv = np.clip(P_pv, None, P_inv)
         
         sim_out['G0'] = G0
+        sim_out['GT'] = GT
         sim_out['P_pv'] = P_pv
         
     if is_gen:
