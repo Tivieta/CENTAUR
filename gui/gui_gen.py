@@ -40,7 +40,7 @@ class gen_ui(QtGui.QWidget):
         self.edit_Pgen.setFixedWidth(100)
         
         label3a = QtGui.QLabel('Minimum generator loading:')
-        label3b = QtGui.QLabel('pu')
+        label3b = QtGui.QLabel('%')
         
         self.edit_Pmin = QtGui.QLineEdit()
         self.edit_Pmin.setFixedWidth(100)
@@ -52,7 +52,7 @@ class gen_ui(QtGui.QWidget):
         self.edit_sfc.setFixedWidth(100)
         
         label5a = QtGui.QLabel('AC/DC charger efficiency:')
-        label5b = QtGui.QLabel('pu (DC coupled only)')
+        label5b = QtGui.QLabel('% (DC coupled only)')
         
         self.edit_ChgEff = QtGui.QLineEdit()
         self.edit_ChgEff.setFixedWidth(100)
@@ -77,9 +77,9 @@ class gen_ui(QtGui.QWidget):
 
         self.edit_nGen.editingFinished.connect(utility.create_validation_hook(self, self.edit_nGen, "Number of generators", 0, 9999))       
         self.edit_Pgen.editingFinished.connect(utility.create_validation_hook(self, self.edit_Pgen, "Generator nominal capacity", 0, 99999))
-        self.edit_Pmin.editingFinished.connect(utility.create_validation_hook(self, self.edit_Pmin, "Generator minimum loading", 0, 1))
+        self.edit_Pmin.editingFinished.connect(utility.create_validation_hook(self, self.edit_Pmin, "Generator minimum loading", 0, 100))
         self.edit_sfc.editingFinished.connect(utility.create_validation_hook(self, self.edit_sfc, "Specific fuel consumption", 0, 99999))
-        self.edit_ChgEff.editingFinished.connect(utility.create_validation_hook(self, self.edit_ChgEff, "AC/DC charger efficiency", 0, 1))
+        self.edit_ChgEff.editingFinished.connect(utility.create_validation_hook(self, self.edit_ChgEff, "AC/DC charger efficiency", 0, 100))
 
         self.refresh_data()  
     

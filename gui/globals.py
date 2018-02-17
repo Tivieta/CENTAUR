@@ -56,16 +56,16 @@ def init():
                         [0.443, 25.66]])
     
     pv_data = {
-        'k_e'    : 0.90,                # Environmental factor for solar module output, e.g. dirt, dust, etc
+        'k_e'    : 90.0,                # Environmental factor for solar module output, e.g. dirt, dust, etc (%)
         'P_inv'  : 150000,              # PV system inverter output (Wac)
-        'k_m'    : 0.95,                # Manufacturer tolerance factor
+        'k_m'    : 95.0,                # Manufacturer tolerance factor (%)
         'P_stc'  : 175000,              # PV system output at STC (Wp)
-        'gamma'  : 0.0038,              # Power temperature coefficient (pu per deg C)
-        'eff_pv' : 0.95,                # Efficiency of PV inverter (AC coupled) or charge controller (DC coupled) in pu
+        'gamma'  : 0.38,                # Power temperature coefficient (% per deg C)
+        'eff_pv' : 95.0,                # Efficiency of PV inverter (AC coupled) or charge controller (DC coupled) in %
         'pv_cpl' : 'DC',                # PV coupling - AC or DC
         'tilt'   : 10.0,                # Tilt angle
         'azimuth' : 180.0,              # Azimuth angle
-        'albedo' : 0.2                  # Albedo / ground reflectance
+        'albedo' : 20.0                 # Albedo / ground reflectance (%)
         }
     
     loads = np.array([[43.9, 43.9],   # 00:00
@@ -108,7 +108,7 @@ def init():
         'SOC_min'    : 30,                                     # Minimum state of charge (battery "empty")
         'SOC_0'      : 100,                                    # Initial state of charge
         'SOC_cyc'    : 80,                                     # State of charge setpoint for cycle charging
-        'eff_conv'   : 0.94,                                   # Battery converter / inverter   efficiency
+        'eff_conv'   : 94.0,                                   # Battery converter / inverter   efficiency (%)
         'p_set'      : 80000,                                  # PV output setpoint for ramp control mode at AC load side (in W)
         't_set'      : [9,15]                                  # Time start/end for ramp control mode (hour of day)
     }
@@ -116,9 +116,9 @@ def init():
     gen_data = {
         'n_gen'     : 1,                   # Number of parallel generators
         'P_gen'     : 60,                  # Generator capacity (kW)
-        'l_min'     : 0.4,                 # Minimum generator loading (pu)
+        'l_min'     : 40.0,                # Minimum generator loading (%)
         'e_f'       : 0.27,                # Fuel efficiency (litres/kWh)
-        'chg_eff'   : 0.95,                # Generator AC/DC charger efficiency (for DC coupled only)
+        'chg_eff'   : 95.0,                # Generator AC/DC charger efficiency in % (for DC coupled only)
         'c_f'       : 0.65                 # Fuel cost (USD/kWh)   
     }
     

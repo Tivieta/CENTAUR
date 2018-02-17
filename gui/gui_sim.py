@@ -100,12 +100,20 @@ class sim_ui(QtGui.QWidget):
         pv_dict = globals.pv_data
         pv_dict['Ktm'] = globals.pv_resource[:,0].tolist()
         pv_dict['T_amb'] = globals.pv_resource[:,1].tolist()
+        pv_dict['k_e'] = pv_dict['k_e'] / 100
+        pv_dict['k_m'] = pv_dict['k_m'] / 100
+        pv_dict['gamma'] = pv_dict['gamma'] / 100
+        pv_dict['eff_pv'] = pv_dict['eff_pv'] / 100
+        pv_dict['albedo'] = pv_dict['albedo'] / 100
         
         batt_dict = globals.batt_data
         batt_dict['T'] = globals.batt_char[:,0].tolist()
         batt_dict['I'] = globals.batt_char[:,1].tolist()
+        batt_dict['eff_conv'] = batt_dict['eff_conv'] / 100
         
         gen_dict = globals.gen_data
+        gen_dict['l_min'] = gen_dict['l_min'] / 100
+        gen_dict['chg_eff'] = gen_dict['chg_eff'] / 100
         
         load_dict = {
             'l_sum' : globals.loads[:,0].tolist(),

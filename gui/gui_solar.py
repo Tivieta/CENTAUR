@@ -74,25 +74,25 @@ class solar_ui(QtGui.QWidget):
         self.edit_Pinv.setFixedWidth(100)
         
         label7a = QtGui.QLabel('Power temperature coefficient:')
-        label7b = QtGui.QLabel('pu/deg C')
+        label7b = QtGui.QLabel('%/deg C')
         
         self.edit_gamma = QtGui.QLineEdit()
         self.edit_gamma.setFixedWidth(100)
         
-        label8a = QtGui.QLabel('Enviromental derating factor:')
-        label8b = QtGui.QLabel('pu')
+        label8a = QtGui.QLabel('Enviromental derating:')
+        label8b = QtGui.QLabel('%')
         
         self.edit_ke = QtGui.QLineEdit()
         self.edit_ke.setFixedWidth(100)
         
-        label9a = QtGui.QLabel('Manufacturer tolerance factor:')
-        label9b = QtGui.QLabel('pu')
+        label9a = QtGui.QLabel('Manufacturer tolerance derating:')
+        label9b = QtGui.QLabel('%')
         
         self.edit_km = QtGui.QLineEdit()
         self.edit_km.setFixedWidth(100)
         
         label10a = QtGui.QLabel('Inverter / SCC efficiency:')
-        label10b = QtGui.QLabel('pu')
+        label10b = QtGui.QLabel('%')
         
         self.edit_eff = QtGui.QLineEdit()
         self.edit_eff.setFixedWidth(100)
@@ -113,7 +113,7 @@ class solar_ui(QtGui.QWidget):
         self.edit_azimuth.setFixedWidth(100)
         
         label13a = QtGui.QLabel('Albedo:')
-        label13b = QtGui.QLabel('pu')
+        label13b = QtGui.QLabel('%')
         
         self.edit_albedo = QtGui.QLineEdit()
         self.edit_albedo.setFixedWidth(100)
@@ -169,13 +169,13 @@ class solar_ui(QtGui.QWidget):
         self.edit_lon.editingFinished.connect(utility.create_validation_hook(self, self.edit_lon, "Longitude", -180, 180))
         self.edit_Pstc.editingFinished.connect(utility.create_validation_hook(self, self.edit_Pstc, "PStc", 0, float("inf")))
         self.edit_Pinv.editingFinished.connect(utility.create_validation_hook(self, self.edit_Pinv, "Pinv", 0, float("inf")))
-        self.edit_gamma.editingFinished.connect(utility.create_validation_hook(self, self.edit_gamma, "Gamma", 0, 1))
-        self.edit_ke.editingFinished.connect(utility.create_validation_hook(self, self.edit_ke, "Ke", 0, 1))
-        self.edit_km.editingFinished.connect(utility.create_validation_hook(self, self.edit_km, "Km", 0, 1))
-        self.edit_eff.editingFinished.connect(utility.create_validation_hook(self, self.edit_eff, "Efficiency", 0, 1))
+        self.edit_gamma.editingFinished.connect(utility.create_validation_hook(self, self.edit_gamma, "Gamma", 0, 100))
+        self.edit_ke.editingFinished.connect(utility.create_validation_hook(self, self.edit_ke, "Ke", 0, 100))
+        self.edit_km.editingFinished.connect(utility.create_validation_hook(self, self.edit_km, "Km", 0, 100))
+        self.edit_eff.editingFinished.connect(utility.create_validation_hook(self, self.edit_eff, "Efficiency", 0, 100))
         self.edit_tilt.editingFinished.connect(utility.create_validation_hook(self, self.edit_tilt, "Tilt", 0, 90))
         self.edit_azimuth.editingFinished.connect(utility.create_validation_hook(self, self.edit_azimuth, "Azimuth", -180, 180))
-        self.edit_albedo.editingFinished.connect(utility.create_validation_hook(self, self.edit_albedo, "Albedo", 0, 1))
+        self.edit_albedo.editingFinished.connect(utility.create_validation_hook(self, self.edit_albedo, "Albedo", 0, 100))
         
         self.pv_coupling.currentIndexChanged.connect(self.update_coupling)
         update_button.clicked.connect(self.buttonClicked)

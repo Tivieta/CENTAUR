@@ -64,7 +64,7 @@ class battery_ui(QtGui.QWidget):
         title3.setFont(QtGui.QFont('arial', weight=QtGui.QFont.Bold))
         
         label4a = QtGui.QLabel('Battery converter / inverter efficiency:')
-        label4b = QtGui.QLabel('pu')
+        label4b = QtGui.QLabel('%')
         
         self.edit_effConv = QtGui.QLineEdit()
         self.edit_effConv.setFixedWidth(100)
@@ -150,7 +150,7 @@ class battery_ui(QtGui.QWidget):
         
         self.edit_Cnom.editingFinished.connect(utility.create_validation_hook(self, self.edit_Cnom, "Nominal capacity", 0, 99999))
         self.edit_Vdc.editingFinished.connect(utility.create_validation_hook(self, self.edit_Vdc, "Nominal DC voltage", 0, 99999))
-        self.edit_effConv.editingFinished.connect(utility.create_validation_hook(self, self.edit_effConv, "Battery converter / inverter efficiency", 0, 1))
+        self.edit_effConv.editingFinished.connect(utility.create_validation_hook(self, self.edit_effConv, "Battery converter / inverter efficiency", 0, 100))
         self.edit_initSOC.editingFinished.connect(utility.create_validation_hook(self, self.edit_initSOC, "Battery initial state of charge", 0, 100))
         self.edit_minSOC.editingFinished.connect(utility.create_validation_hook(self, self.edit_minSOC, "Battery minimum state of charge", 0, 100))
         self.edit_SOC_cyc.editingFinished.connect(utility.create_validation_hook(self, self.edit_SOC_cyc, "Cycle charging SOC setpoint", 0, 100))
